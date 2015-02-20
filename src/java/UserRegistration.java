@@ -12,16 +12,15 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -40,7 +39,7 @@ public class UserRegistration extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected boolean processRequest(HttpServletRequest request, HttpServletResponse response)
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         response.setContentType("text/html;charset=UTF-8");
@@ -56,12 +55,21 @@ public class UserRegistration extends HttpServlet {
             //attempt to read from the post variables
             username = request.getParameter("email");
             password = request.getParameter("password");
+            
+            HttpSession session = request.getSession(true);
 
+            
+
+            String mysql_host = Configuration.getMySQLHost();
+            String mysql_username = Configuration.getMySQLUser();
+            String mysql_password = Configuration.getMySQLPassword();
+            String mysql_db = Configuration.getMySQLDatabase();
+            
             MessageDigest md = null;
             try {
                 md = MessageDigest.getInstance("MD5");
             } catch (NoSuchAlgorithmException ex) {
-                Logger.getLogger(UserRegistration.class.getName()).log(Level.SEVERE, null, ex);
+                validationWarnings.add("An error occured");
             }
             md.update(password.getBytes());
             byte byteData[] = md.digest();
@@ -102,21 +110,16 @@ public class UserRegistration extends HttpServlet {
 
             //Do we have any warnings?
             if (validationWarnings.size() > 0) {
-
-                //Iterate over form validations and display
-                for (String warning : validationWarnings) {
-                    out.println(warning + "<br/>");
-                }
-
-                return false;
+                session.setAttribute("errors", validationWarnings);
+                this.redirectToRegistration(response);
             }
 
             try {
                 try {
                     Class.forName("com.mysql.jdbc.Driver");
-                    String connectionURL = "jdbc:mysql://127.0.0.1/ecubuddychat";
+                    String connectionURL = "jdbc:mysql://"+mysql_host+"/"+mysql_db;
                     Connection connection = null;
-                    connection = (Connection) DriverManager.getConnection(connectionURL, "root", "l33th4x0r");
+                    connection = (Connection) DriverManager.getConnection(connectionURL, mysql_username, mysql_password);
 
                     try {
                         Statement stmt = (Statement) connection.createStatement();
@@ -133,41 +136,38 @@ public class UserRegistration extends HttpServlet {
                                 preparedStatement.setString(1, username);
                                 preparedStatement.setString(2, md5Password);
                                 preparedStatement.executeUpdate(); 
+                                
+                                session.setAttribute("message","Registration successful");
 
-                                //return false;
                             }
 
                         } catch (Exception ex) {
-                            validationWarnings.add(ex.toString());
+                            validationWarnings.add("An error occured");
                         }
 
                     } catch (Exception ex) {
-                        validationWarnings.add(ex.toString());
+                        validationWarnings.add("An error occured");
                     }
 
                     connection.close();
 
-                } catch (Exception ex) {
-                    validationWarnings.add("Unable to connect to database" + ex.toString());
+                } catch (ClassNotFoundException ex) {
+                    validationWarnings.add("An error occured");
+                } catch (SQLException ex) {
+                    validationWarnings.add("An error occured");
                 }
         } catch (Exception ex) {
             validationWarnings.add("No data received");
         }
         //Do we have any warnings?
         if (validationWarnings.size() > 0) {
-
-            //Iterate over form validations and display
-            for (String warning : validationWarnings) {
-                out.println(warning + "<br/>");
-            }
-
-           // return false;
+                session.setAttribute("errors", validationWarnings);  
+                this.redirectToRegistration(response);
         }
         } finally {
             out.close();
         }
-        
-        return true;
+        this.redirectToLogin(response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -209,4 +209,16 @@ public class UserRegistration extends HttpServlet {
         return "ECU Buddy Chat Registration Service";
     }// </editor-fold>
 
+    public void redirectToRegistration(HttpServletResponse response) {
+        String site = new String("register.jsp");
+        response.setStatus(response.SC_MOVED_TEMPORARILY);
+        response.setHeader("Location", site);
+    }
+    
+    public void redirectToLogin(HttpServletResponse response) {
+        String site = new String("index.jsp");
+        response.setStatus(response.SC_MOVED_TEMPORARILY);
+        response.setHeader("Location", site);
+    }
+    
 }
