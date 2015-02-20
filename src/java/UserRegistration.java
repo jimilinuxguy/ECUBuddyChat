@@ -49,12 +49,18 @@ public class UserRegistration extends HttpServlet {
         //Initialize username and password variables
         String username = null;
         String password = null;
+        String firstName = null;
+        String lastName = null;
+        
         List<String> validationWarnings = new ArrayList<String>();
 
         try {
             //attempt to read from the post variables
             username = request.getParameter("email");
             password = request.getParameter("password");
+            
+            firstName = request.getParameter("firstname");
+            lastName = request.getParameter("lastname");
             
             HttpSession session = request.getSession(true);
 
@@ -131,10 +137,14 @@ public class UserRegistration extends HttpServlet {
                             } else {
                                 //Username not in use
                                 // Do registration
-                                String sql = "INSERT INTO users (email,passphrase)" + "VALUES (?, ?)";
+                                String sql = "INSERT INTO users (email,passphrase,firstname,lastname)" + "VALUES (?, ?, ?, ?)";
                                 PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
+                           
                                 preparedStatement.setString(1, username);
                                 preparedStatement.setString(2, md5Password);
+                                preparedStatement.setString(3,firstName);
+                                preparedStatement.setString(4,lastName);
+                                
                                 preparedStatement.executeUpdate(); 
                                 
                                 session.setAttribute("message","Registration successful");
@@ -165,6 +175,7 @@ public class UserRegistration extends HttpServlet {
                 this.redirectToRegistration(response);
         }
         } finally {
+            this.redirectToLogin(response);
             out.close();
         }
         this.redirectToLogin(response);
