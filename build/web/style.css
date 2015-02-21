@@ -8,3 +8,35 @@ and open the template in the editor.
     Author     : jimisanchez
 */
 
+    #registrationForm {
+        width : 700px;
+    }
+    #searchForm {
+        width : 500px;
+    }
+    #groupCreateForm {
+        width : 500px;
+    }
+    form {
+        border : black dashed thin;
+        margin-left : auto;
+        margin-right: auto;
+    }
+    #loginForm {
+        margin-left: auto;
+        margin-right: auto;
+        width : 700px;
+    }
+    h1 {
+        text-align: center
+    }
+    #footer {
+        margin-left : auto;
+        margin-right : auto;
+        text-align : center;
+    }
+    #indexWarningsDiv {
+        margin-left : auto;
+        margin-right: auto;
+        text-align: center;
+    }

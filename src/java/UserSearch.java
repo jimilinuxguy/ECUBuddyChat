@@ -5,12 +5,7 @@
  */
 
 import com.google.gson.Gson;
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.Statement;
 import java.io.IOException;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -42,6 +37,7 @@ public class UserSearch extends HttpServlet {
         
         String firstName = null;
         String lastName = null;
+        String email = null;
         
         List<UserClass> list;
        
@@ -50,8 +46,9 @@ public class UserSearch extends HttpServlet {
             
             firstName = request.getParameter("firstname");
             lastName = request.getParameter("lastname");
+            email = request.getParameter("email");
             
-            UserClassDAO ucdao = new UserClassDAO(firstName,lastName);            
+            UserClassDAO ucdao = new UserClassDAO(firstName,lastName,email);            
             list = ucdao.list();
 
             Gson gson = new Gson();

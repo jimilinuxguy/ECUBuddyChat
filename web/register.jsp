@@ -71,5 +71,6 @@
 
             </fieldset>
         </form>
+        <jsp:include page="footer.html" />
     </body>
 </html>

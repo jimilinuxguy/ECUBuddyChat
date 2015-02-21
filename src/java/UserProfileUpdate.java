@@ -36,30 +36,18 @@ public class UserProfileUpdate extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        try {
-            
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(UserProfileUpdate.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            String connectionURL = "jdbc:mysql://127.0.0.1/ecubuddychat";
-            Connection connection = null;
-            try {
-                connection = (Connection) DriverManager.getConnection(connectionURL, "root", "l33th4x0r");
-            } catch (SQLException ex) {
-                // Do something
-            }
-            
-            try {
-                Statement stmt = (Statement) connection.createStatement();
-                out.println("IDIOTS");
-            } catch (SQLException ex) {
-                // Do something
-            }
 
+        PrintWriter out = response.getWriter();
+
+        Connection connection = null;
+        
+        try {
+            DataConnectionClass dcc = new DataConnectionClass();
+            connection = dcc.getConnection();
+            //Todo implement updating profile
+            
         } finally {
             out.close();
         }

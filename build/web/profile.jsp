@@ -19,8 +19,8 @@
     <body>
         <h1>Edit Profile</h1>
                 <% 
-                    Connection connection = (Connection) DriverManager.getConnection(
-                        "jdbc:mysql://127.0.0.1/ecubuddychat", "root", "l33th4x0r");
+                    DataConnectionClass dcc = new DataConnectionClass();
+                    Connection connection = dcc.getConnection();
 
                     Statement statement = (Statement) connection.createStatement();
 

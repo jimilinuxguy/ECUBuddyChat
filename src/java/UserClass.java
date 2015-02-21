@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 
-import java.beans.*;
 import java.io.Serializable;
 
 /**

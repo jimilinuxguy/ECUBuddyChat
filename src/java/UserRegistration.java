@@ -64,13 +64,6 @@ public class UserRegistration extends HttpServlet {
             
             HttpSession session = request.getSession(true);
 
-            
-
-            String mysql_host = Configuration.getMySQLHost();
-            String mysql_username = Configuration.getMySQLUser();
-            String mysql_password = Configuration.getMySQLPassword();
-            String mysql_db = Configuration.getMySQLDatabase();
-            
             MessageDigest md = null;
             try {
                 md = MessageDigest.getInstance("MD5");
@@ -123,15 +116,19 @@ public class UserRegistration extends HttpServlet {
 
             try {
                 try {
-                    Class.forName("com.mysql.jdbc.Driver");
-                    String connectionURL = "jdbc:mysql://"+mysql_host+"/"+mysql_db;
+                    
                     Connection connection = null;
-                    connection = (Connection) DriverManager.getConnection(connectionURL, mysql_username, mysql_password);
-
+                    DataConnectionClass dcc = new DataConnectionClass();
+                    connection = dcc.getConnection();
+                    
                     try {
+                        
                         Statement stmt = (Statement) connection.createStatement();
+                      
                         try {
+                          
                             ResultSet rs = stmt.executeQuery("SELECT * FROM users WHERE email = '" + username + "'");
+                            
                             if (rs.first()) {
                                 // This means the user already exists
                                 validationWarnings.add("The desired username is already in use. Choose another, or reset your password if this account belongs to you");
@@ -161,9 +158,6 @@ public class UserRegistration extends HttpServlet {
                     }
 
                     connection.close();
-
-                } catch (ClassNotFoundException ex) {
-                    validationWarnings.add("An error occured");
                 } catch (SQLException ex) {
                     validationWarnings.add("An error occured");
                 }

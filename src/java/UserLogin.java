@@ -7,9 +7,10 @@
 import com.mysql.jdbc.*;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,10 +36,16 @@ public class UserLogin extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         String username = null;
         String password = null;
+        Connection connection = null;
+        
+        List<String> validationWarnings = new ArrayList<String>();
+        HttpSession session = request.getSession(true);
+        
         try {
             
             username = request.getParameter("email");
@@ -47,36 +54,46 @@ public class UserLogin extends HttpServlet {
             if ( username.length() > 0 && password.length() > 0 ) {
                 
                 try {
-                    Class.forName("com.mysql.jdbc.Driver");
-                } catch (ClassNotFoundException ex) {
-                    //out.println("Here" + ex);
-                }
-                String connectionURL = "jdbc:mysql://127.0.0.1/ecubuddychat";
-                Connection connection = null;
-                
-                try {
+                    DataConnectionClass dcc = new DataConnectionClass();
+                    connection = dcc.getConnection();
+                    System.out.println("Here");
+                    System.out.println(connection);
                     
-                    connection = (Connection) DriverManager.getConnection(connectionURL, "root", "l33th4x0r");
-                    Statement stmt = (Statement) connection.createStatement();
-                    ResultSet rs = stmt.executeQuery("SELECT id,email FROM users WHERE email = '" + username + "' AND passphrase=MD5('"+password+"') ");
-                    Boolean successLogin = rs.first();
-                   
-                    if (successLogin) {
-                       HttpSession session = request.getSession(true);
-                       session.setAttribute("user_id", rs.getLong("id"));
-                       session.setAttribute("username",rs.getString("email"));
-                       String site = new String("index.jsp");
-                       response.setStatus(response.SC_MOVED_TEMPORARILY);
-                       response.setHeader("Location", site);
-                    } else {
-                        out.println("Invalid username or password");
-                    }
-                } catch (SQLException ex) {
-                    out.println(ex);
-                }
+                    try {
 
+                        Statement stmt = (Statement) connection.createStatement();
+                        ResultSet rs = stmt.executeQuery("SELECT id,email FROM users WHERE email = '" + username + "' AND passphrase=MD5('"+password+"') ");
+                        Boolean successLogin = rs.first();
+                        System.out.println("There = " + successLogin);
+                    
+                        if (successLogin) {
+                            session.setAttribute("user_id", rs.getLong("id"));
+                            session.setAttribute("username",rs.getString("email"));
+                            String site = new String("index.jsp");
+                            response.setStatus(response.SC_MOVED_TEMPORARILY);
+                            response.setHeader("Location", site);
+                        } else {
+                            validationWarnings.add("Invalid username or password");
+                        }
+                    } catch (Exception ex) {
+                        System.out.println(ex);
+                    }
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                }
+            } else {
+                validationWarnings.add("No data received");
             }
         } finally {
+
+            if (validationWarnings.size() > 0) {
+                session.setAttribute("errors", validationWarnings);  
+            }
+            
+            String site = new String("index.jsp");
+            response.setStatus(response.SC_MOVED_TEMPORARILY);
+            response.setHeader("Location", site);
+
             out.close();
         }
     }

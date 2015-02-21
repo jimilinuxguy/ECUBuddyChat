@@ -40,18 +40,41 @@
   </div>
 </div>
 
+<div class="form-group">
+    <div class="col-md-8" id="searchResults">
+        <ul data-bind="foreach: searchUsers">
+            <li> 
+                <span data-bind="text: firstName + ' ' + lastName "></span>
+                <a href="#" data-bind="text: 'Send Chat' "></a>
+            </li>
+        </ul>
+    </div>
+</div>
+
 </fieldset>
 </form>
 
 <script>
     $(document).ready( function() {
+        
+        var AppViewModel = {
+            searchUsers : ko.observableArray([])
+        }
+        
+        ko.applyBindings( AppViewModel );
+        
         $('#searchButton').on('click',function() {
             $.ajax({
                url : 'UserSearch',
                dataType : 'json',
                data : { firstname : $('#firstname').val(), lastname : $('#lastname').val(), email : $('#email').val() },
                success : function(resp) {
-                   alert(resp);
+                   
+                   AppViewModel.searchUsers.removeAll();
+                   
+                   $.each(resp, function(i,el) {
+                       AppViewModel.searchUsers.push(el);
+                   });
                }
             });
         });
