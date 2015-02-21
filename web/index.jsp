@@ -22,7 +22,7 @@
         <!-- End of username check -->
         <% } else { %>
             <!-- User is logged in, include logged in functionality -->
-            
+            <jsp:include page="searchForm.html" />
         <% } %>
         <!-- End of logged in functionality -->
     </body>

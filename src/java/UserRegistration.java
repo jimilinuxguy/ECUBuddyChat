@@ -113,11 +113,12 @@ public class UserRegistration extends HttpServlet {
                 //Password not passed through
                 validationWarnings.add("Password required.");
             }
-
+            System.out.println("Size = " +validationWarnings.size());
             //Do we have any warnings?
             if (validationWarnings.size() > 0) {
                 session.setAttribute("errors", validationWarnings);
                 this.redirectToRegistration(response);
+                return;
             }
 
             try {
@@ -175,8 +176,7 @@ public class UserRegistration extends HttpServlet {
                 this.redirectToRegistration(response);
         }
         } finally {
-            this.redirectToLogin(response);
-            out.close();
+            //Todo
         }
         this.redirectToLogin(response);
     }
@@ -224,12 +224,14 @@ public class UserRegistration extends HttpServlet {
         String site = new String("register.jsp");
         response.setStatus(response.SC_MOVED_TEMPORARILY);
         response.setHeader("Location", site);
+        return;
     }
     
     public void redirectToLogin(HttpServletResponse response) {
         String site = new String("index.jsp");
         response.setStatus(response.SC_MOVED_TEMPORARILY);
         response.setHeader("Location", site);
+        return;
     }
     
 }

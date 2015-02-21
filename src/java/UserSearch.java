@@ -54,15 +54,12 @@ public class UserSearch extends HttpServlet {
             UserClassDAO ucdao = new UserClassDAO(firstName,lastName);            
             list = ucdao.list();
 
-            if ( list.size() > 0 ) {
-                Gson gson = new Gson();
-                result = gson.toJson(list);                
-            }
+            Gson gson = new Gson();
+            result = gson.toJson(list); 
+            
         } catch (Exception ex) {
             // Todo
-            System.out.println("Exception = " + ex);
         }
-        System.out.println("Wee = " + result);
         response.getWriter().write(result);
     }
 

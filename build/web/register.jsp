@@ -16,9 +16,9 @@
     </head>
     <body>
         <h1>User Registration</h1>
-        <%= validationWarnings %>
+        <% if (!validationWarnings.isEmpty()) { %><div class="alert alert-danger" role="alert"><%= validationWarnings %><% } %></div>
         <% session.setAttribute("errors",null); %>
-        <form action="UserRegistration" method="post" class="form-horizontal">
+        <form id="registrationForm" action="UserRegistration" method="post" class="form-horizontal">
             <fieldset>
 
             <!-- Form Name -->
