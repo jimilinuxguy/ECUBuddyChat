@@ -6,7 +6,7 @@
 
 /**
  *
- * @author jimisanchez
+ * @author jimisanchez and sdlauer
  */
 public class GroupClass {
     
