@@ -18,7 +18,14 @@
         <jsp:include page="forgotPasswordForm.html"/>
             <div class="form-group">
                 <label class="col-md-4 control-label" id="passwordLabel"> 
-                   Jimi <% if(session.getAttribute("passkey") != null) { session.getAttribute("passkey").toString(); } %> 
+                    <% if(session.getAttribute("passkey") != null )
+                        {
+                            if(session.getAttribute("passkey").toString() != "")
+                            {
+                                {session.getAttribute("passkey").toString();}
+                            }
+                        }
+                    %>
                 </label>
             </div>
     </body>
