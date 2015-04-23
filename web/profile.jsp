@@ -41,5 +41,7 @@
             <input type="submit" value="Update" />
         </form>
         <%  } %>
+                
+        <jsp:include page="footer.html" />
     </body>
 </html>
