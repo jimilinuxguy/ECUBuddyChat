@@ -94,7 +94,7 @@ public class UserForgotPassword extends HttpServlet {
 
                         session.setAttribute("message","Your new password is "+ password);
                         session.setAttribute("passwordChange", "Your password has been successfully changed!\n"+
-                                "Login with you new password.");
+                                "Login with your new password.");
                     }
                     catch (Exception ex) 
                     {

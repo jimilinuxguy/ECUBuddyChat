@@ -14,8 +14,12 @@ and open the template in the editor.
     #searchForm {
         width : 500px;
     }
+    #chatForm {
+        width : 600px;
+      
+    }
     #groupCreateForm {
-        width : 500px;
+        width : 700px;
     }
     form {
         border : black dashed thin;
@@ -40,3 +44,4 @@ and open the template in the editor.
         margin-right: auto;
         text-align: center;
     }
+  

@@ -28,8 +28,7 @@
         <% } else { %>
             <!-- User is logged in, include logged in functionality -->
             <jsp:include page="searchForm.html" />
-            <jsp:include page="groupCreateForm.html" />
-        <% } %>
+         <% } %>
         <!-- End of logged in functionality -->
         
         <jsp:include page="footer.html" />
