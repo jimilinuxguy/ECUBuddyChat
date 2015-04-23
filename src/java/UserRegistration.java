@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 
+import BuddyDB.DataConnectionClass;
 import EmailFormatValidator.EmailFormatValidator;
 import com.mysql.jdbc.*;
 import java.io.IOException;

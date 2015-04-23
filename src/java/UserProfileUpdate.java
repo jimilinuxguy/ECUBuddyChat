@@ -4,7 +4,9 @@
  * and open the template in the editor.
  */
 
+import BuddyDB.DataConnectionClass;
 import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,6 +19,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -43,11 +46,28 @@ public class UserProfileUpdate extends HttpServlet {
 
         Connection connection = null;
         
+        System.out.println("JIMI IS THE MAN");
+        
         try {
-            DataConnectionClass dcc = new DataConnectionClass();
-            connection = dcc.getConnection();
-            //Todo implement updating profile
-            
+                    DataConnectionClass dcc = new DataConnectionClass();
+                    connection = dcc.getConnection();
+
+            String firstName = request.getParameter("firstname");
+            String lastName = request.getParameter("lastname");
+            String phoneNumber = request.getParameter("phone");
+            HttpSession session = request.getSession(true);
+            String userId = (String) session.getAttribute("user_id").toString();
+            String updateQuery = "UPDATE users set firstname=?, lastname=?, phone=? where id=?";
+            PreparedStatement preparedStmt = (PreparedStatement) connection.prepareStatement(updateQuery);
+            preparedStmt.setString(1, firstName);
+            preparedStmt.setString(2, lastName);
+            preparedStmt.setString(3, phoneNumber);
+            preparedStmt.setString(4, userId);
+            preparedStmt.executeUpdate();
+            this.redirectToProfile(response);
+            System.out.println(updateQuery);
+        } catch(Exception ex) {
+            System.out.println("This didnt work " + ex.getMessage());
         } finally {
             out.close();
         }
@@ -91,5 +111,10 @@ public class UserProfileUpdate extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
+    public void redirectToProfile(HttpServletResponse response) {
+        String site = new String("profile.jsp");
+        response.setStatus(response.SC_MOVED_TEMPORARILY);
+        response.setHeader("Location", site);
+        return;
+    }
 }

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 
+import BuddyDB.DataConnectionClass;
 import com.mysql.jdbc.*;
 import java.io.IOException;
 import java.io.PrintWriter;

@@ -4,6 +4,7 @@
     Author     : jimisanchez
 --%>
 
+<%@page import="BuddyDB.DataConnectionClass"%>
 <%@page import="java.sql.ResultSet,java.sql.DriverManager,com.mysql.jdbc.*"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page session="true" %>
@@ -34,9 +35,9 @@
         %>
         <form action="UserProfileUpdate" method="post">
             Username: <input type="text" readonly="readonly" disabled value="<%= resultset.getString("email") %>" /><br/>
-            First Name: <input type="text" value="<%= resultset.getString("firstname") %>" /><br/>
-            Last Name: <input type="text" value="<%= resultset.getString("lastname") %>" /><br/>
-            Phone: <input type="text" value="<%= resultset.getString("phone") %>" /><br/>
+            First Name: <input type="text" name="firstname" value="<%= resultset.getString("firstname") %>" /><br/>
+            Last Name: <input type="text" name="lastname" value="<%= resultset.getString("lastname") %>" /><br/>
+            Phone: <input type="text" name="phone" value="<%= resultset.getString("phone") %>" /><br/>
             <input type="submit" value="Update" />
         </form>
         <%  } %>

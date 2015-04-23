@@ -1,3 +1,5 @@
+package BuddyDB;
+
 
 import com.mysql.jdbc.*;
 import java.sql.DriverManager;
