@@ -30,7 +30,5 @@
             <jsp:include page="searchForm.html" />
          <% } %>
         <!-- End of logged in functionality -->
-        
-        <jsp:include page="footer.html" />
     
 </html>
