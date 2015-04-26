@@ -14,7 +14,7 @@
 </div>
 
 
-<legend>Group Create</legend>
+<legend><br>Group Create</legend>
 
 <!-- Text input-->
 <div class="form-group">
@@ -38,3 +38,30 @@
 
 </fieldset>
 </form>
+
+<script>
+    $(document).ready( function() {
+        
+        var AppViewModel = {
+            searchUsers : ko.observableArray([])
+        }
+        
+        ko.applyBindings( AppViewModel );
+        
+        $('#searchButton').on('click',function() {
+            $.ajax({
+               url : 'GroupSearch',
+               dataType : 'gson',
+               data : { groupName : $('#groupName').val() },
+               success : function(resp) {
+                   
+                   AppViewModel.searchGroup.removeAll();
+                   
+                   $.each(resp, function(i,el) {
+                       AppViewModel.searchGroup.push(el);
+                   });
+               }
+            });
+        });
+    } );
+</script>

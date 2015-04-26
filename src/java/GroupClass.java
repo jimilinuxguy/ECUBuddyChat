@@ -12,7 +12,7 @@ public class GroupClass {
     
     private Integer groupId = null;
     private String groupName = null;
-    private Boolean active = null;
+    private Integer active = 0;
     
     public void setGroupId(Integer id) {
         this.groupId = id;
@@ -30,11 +30,11 @@ public class GroupClass {
         return this.groupName;
     }
     
-    public void setActive(Boolean active) {
+    public void setActive(Integer active) {
         this.active = active;
     }
     
-    public Boolean getActive() {
+    public Integer getActive() {
         return this.active;
     }
 }
