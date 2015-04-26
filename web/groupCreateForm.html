@@ -1,8 +1,10 @@
-<form id="groupCreateForm" class="form-horizontal">
-<fieldset>
+<form id="searchGroupForm" class="form-horizontal">
+</form>
 
+<form id="groupCreateForm" class="form-horizontal">
  <!-- Form Name -->
-<legend>Group Chat</legend>
+ <fieldset>
+  <legend>Group Chat</legend>
 
 <!-- Text input-->
 <div class="form-group">
@@ -12,9 +14,22 @@
     
   </div>
 </div>
+<!-- Button (Double) -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="createGroupButton">Actions</label>
+  <div class="col-md-8">
+    <button id="resetGroupButton" name="searchGroupButton" class="btn btn-success">Search</button>
 
+      <button id="resetGroupButton" name="resetGroupButton" class="btn btn-danger">Reset</button>
+    
+   </div>
+</div>
+</fieldset>
+</form>
 
-<legend><br>Group Create</legend>
+<form id="groupCreateForm" class="form-horizontal">
+ <fieldset>   
+<legend>Group Create</legend>
 
 <!-- Text input-->
 <div class="form-group">
@@ -31,14 +46,11 @@
   <div class="col-md-8">
     <button id="createGroupButton" name="createGroupButton" class="btn btn-success">Create Group</button>
     <button id="resetGroupButton" name="resetGroupButton" class="btn btn-danger">Reset</button>
-    
-    <button id="resetGroupButton" name="searchGroupButton" class="btn btn-danger">Search</button>
-  </div>
+    </div>
 </div>
 
 </fieldset>
 </form>
-
 <script>
     $(document).ready( function() {
         
