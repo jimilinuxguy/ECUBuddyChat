@@ -16,14 +16,14 @@
         <title>ECU Buddy Chat</title>
         <jsp:include page="header.html" />
     </head>
-    
+    <body>
     <div class="container" id="maincontainer">
         <div class="row">
             <div class="col-sm-12" id="pageTitle">
-                <h3>
+                <h1>
             Welcome <% if (username !=null ) { %>Back <br /><%=username %><% } else { %>to ECU Buddy Chat<% } %>! <% if (username !=null ) { %><a href="profile.jsp"><br /> Manage Profile</a><% } %></div>
          <% if (!validationWarnings.isEmpty()) { %><div id="indexWarningsDiv" class="alert alert-danger" role="alert"><%= validationWarnings %><% } %>
-             </h3></div>
+             </h1></div>
              <div class="graystroke col-sm-12"></div>
          </div>
         <% session.setAttribute("errors",null); session.setAttribute("passwordChange", null); %>
@@ -38,4 +38,5 @@
          <% } %>
         <!-- End of logged in functionality -->
     <jsp:include page="footer.html" />
+    </body>
 </html>
