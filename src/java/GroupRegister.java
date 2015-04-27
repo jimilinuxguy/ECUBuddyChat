@@ -63,7 +63,7 @@ public class GroupRegister extends HttpServlet {
                 System.out.println(Ex.getMessage());
             }
         } catch (Exception ex) {
-            System.out.println(Ex.getMessage());
+            System.out.println(ex.getMessage());
         }
         
                                     String site = new String("groups.jsp");
