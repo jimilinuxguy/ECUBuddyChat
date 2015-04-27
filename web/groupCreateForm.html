@@ -1,6 +1,5 @@
 
-
-<form id="groupCreateForm" class="form-horizontal" method="post" action="GroupSearch">
+<form>
  <!-- Form Name -->
  <fieldset>
   <legend>Group Chat</legend>
@@ -17,15 +16,17 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="createGroupButton">Actions</label>
   <div class="col-md-8">
-    <button id="resetGroupButton" name="searchGroupButton" class="btn btn-success">Search</button>
+    <button id="searchGroupButton" name="searchGroupButton" class="btn btn-success">Search</button>
 
       <button id="resetGroupButton" name="resetGroupButton" class="btn btn-danger">Reset</button>
     
    </div>
 </div>
+<ul data-bind="foreach: searchGroups">
+    <li data-bind="text: groupName"></li>
+</ul>
 </fieldset>
 </form>
-
 <form id="groupCreateForm" class="form-horizontal" method="post" action="GroupRegister">
  <fieldset>   
 <legend>Group Create</legend>
@@ -54,22 +55,25 @@
     $(document).ready( function() {
         
         var AppViewModel = {
-            searchUsers : ko.observableArray([])
+            searchGroups : ko.observableArray([])
         }
         
         ko.applyBindings( AppViewModel );
         
-        $('#searchButton').on('click',function() {
+        $('#searchGroupButton').on('click',function(e) {
+            e.preventDefault();
+            
             $.ajax({
                url : 'GroupSearch',
-               dataType : 'gson',
-               data : { groupName : $('#groupName').val() },
+               dataType : 'json',
+               method : 'post',
+               data : { groupname : $('#groupname').val() },
                success : function(resp) {
                    
-                   AppViewModel.searchGroup.removeAll();
+                   AppViewModel.searchGroups.removeAll();
                    
                    $.each(resp, function(i,el) {
-                       AppViewModel.searchGroup.push(el);
+                       AppViewModel.searchGroups.push(el);
                    });
                }
             });

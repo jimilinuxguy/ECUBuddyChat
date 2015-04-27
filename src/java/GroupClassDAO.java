@@ -34,7 +34,8 @@ public class GroupClassDAO {
             Connection connection = null;
             try {
 
-                String groupQuery = "SELECT id,group_name,active from groups WHERE group_name =" + groupName;
+                String groupQuery = "SELECT id,group_name,active from groups WHERE group_name ='" + groupName+"'";
+                System.out.println(groupQuery);
                 DataConnectionClass dcc = new DataConnectionClass();
                 connection = dcc.getConnection();
                 
