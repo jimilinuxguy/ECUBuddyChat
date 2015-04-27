@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author lauers14
  */
+@WebServlet(urlPatterns = {"/GroupSearch"})
 public class GroupSearch extends HttpServlet {
 
     /**
@@ -41,7 +42,7 @@ public class GroupSearch extends HttpServlet {
  
         try {
             
-            groupName = request.getParameter("groupName");
+            groupName = request.getParameter("groupname");
  
             GroupClassDAO gcdao = new GroupClassDAO(groupName);            
             list = gcdao.list();
