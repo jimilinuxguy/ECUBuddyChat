@@ -1,33 +1,30 @@
-
-import BuddyDB.DataConnectionClass;
-import EmailFormatValidator.EmailFormatValidator;
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
-import com.mysql.jdbc.Statement;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 
+import BuddyDB.DataConnectionClass;
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  *
- * @author lauers14
+ * @author jimisanchez
  */
-public class GroupRegister  extends HttpServlet {
+@WebServlet(urlPatterns = {"/GroupRegister"})
+public class GroupRegister extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,90 +32,44 @@ public class GroupRegister  extends HttpServlet {
      *
      * @param request servlet request
      * @param response servlet response
-     * @return boolean
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         response.setContentType("text/html;charset=UTF-8");
-
-        PrintWriter out = response.getWriter();
-
-        //Initialize username and password variables
-        String groupname = null;
-        int id = 0;
-        int active = 1;
-         
+        String groupName;
+        groupName = request.getParameter("groupname");
+        
+        Connection connection = null;
+        DataConnectionClass dcc = new DataConnectionClass();
+        connection = dcc.getConnection();
         List<String> validationWarnings = new ArrayList<String>();
-
         try {
-            //attempt to read from the post variables
-            groupname = request.getParameter("group_name");
-            
-            HttpSession session = request.getSession(true);
-
-            
-          try {
-                try {
+            Statement stmt = (Statement) connection.createStatement();
+            try {
+                ResultSet rs = stmt.executeQuery("SELECT * FROM groups WHERE group_name = '" + groupName + "'");
+                if ( rs.first() ) {
+                    validationWarnings.add("The desired group name is already in use. Choose another.");
+                } else {
+                    String sql = "INSERT INTO groups (id,group_name,active)" + "VALUES (NULL, ?, ?)";
+                    PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
+                    preparedStatement.setString(1, groupName);
+                    preparedStatement.setBoolean(2,true);
                     
-                    Connection connection = null;
-                    DataConnectionClass dcc = new DataConnectionClass();
-                    connection = dcc.getConnection();
-                    
-                    try {
-                        
-                        Statement stmt = (Statement) connection.createStatement();
-                      
-                        try {
-                          
-                            ResultSet rs = stmt.executeQuery("SELECT * FROM groups WHERE group_name = '" + groupname + "'");
-                            
-                            if (rs.first()) {
-                                // This means the user already exists
-                                validationWarnings.add("The desired group name is already in use. Choose another.");
-                            } else {
-                                //Groupname not in use
-                                // Do create group
-                                id =id +1;
-                                String sql = "INSERT INTO groups (id,group_name,active)" + "VALUES (?, ?, ?)";
-                                PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
-                           
-                                preparedStatement.setInt(1, id);
-                                preparedStatement.setString(2, groupname);
-                                preparedStatement.setInt(3,active);
-                                
-                                preparedStatement.executeUpdate(); 
-                                
-                                session.setAttribute("message","Group Creaction Successful");
-
-                            }
-
-                        } catch (Exception ex) {
-                            validationWarnings.add("An error occured");
-                        }
-
-                    } catch (Exception ex) {
-                        validationWarnings.add("An error occured");
-                    }
-
-                    connection.close();
-                } catch (SQLException ex) {
-                    validationWarnings.add("An error occured");
+                    preparedStatement.executeUpdate(); 
                 }
+            } catch (Exception Ex) {
+                System.out.println(Ex.getMessage());
+            }
         } catch (Exception ex) {
-            validationWarnings.add("No data received");
+            System.out.println(ex.getMessage());
         }
-        //Do we have any warnings?
-        if (validationWarnings.size() > 0) {
-                session.setAttribute("errors", validationWarnings);  
-                this.redirectToRegistration(response);
-        }
-        } finally {
-            //Todo
-        }
-        this.redirectToLogin(response);
+        
+                                    String site = new String("groups.jsp");
+                            response.setStatus(response.SC_MOVED_TEMPORARILY);
+                            response.setHeader("Location", site);
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -157,22 +108,7 @@ public class GroupRegister  extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "ECU Buddy Chat Registration Service";
+        return "Short description";
     }// </editor-fold>
 
-    public void redirectToRegistration(HttpServletResponse response) {
-        String site = new String("register.jsp");
-        response.setStatus(response.SC_MOVED_TEMPORARILY);
-        response.setHeader("Location", site);
-        return;
-    }
-    
-    public void redirectToLogin(HttpServletResponse response) {
-        String site = new String("index.jsp");
-        response.setStatus(response.SC_MOVED_TEMPORARILY);
-        response.setHeader("Location", site);
-        return;
-    }
-    
-    
 }
