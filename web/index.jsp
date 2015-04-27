@@ -17,8 +17,15 @@
         <jsp:include page="header.html" />
     </head>
     
-    <h1>Welcome <% if (username !=null ) { %>Back <br /><%=username %><% } else { %>to ECU Buddy Chat<% } %>! <% if (username !=null ) { %><a href="profile.jsp"><br /> Manage Profile</a><% } %></h1>
-         <% if (!validationWarnings.isEmpty()) { %><div id="indexWarningsDiv" class="alert alert-danger" role="alert"><%= validationWarnings %><% } %></div>
+    <div class="container" id="maincontainer">
+        <div class="row">
+            <div class="col-sm-12" id="pageTitle">
+                <h3>
+            Welcome <% if (username !=null ) { %>Back <br /><%=username %><% } else { %>to ECU Buddy Chat<% } %>! <% if (username !=null ) { %><a href="profile.jsp"><br /> Manage Profile</a><% } %></div>
+         <% if (!validationWarnings.isEmpty()) { %><div id="indexWarningsDiv" class="alert alert-danger" role="alert"><%= validationWarnings %><% } %>
+             </h3></div>
+             <div class="graystroke col-sm-12"></div>
+         </div>
         <% session.setAttribute("errors",null); session.setAttribute("passwordChange", null); %>
 
         <!-- Only do if the user is not logged in -->

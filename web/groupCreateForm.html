@@ -1,5 +1,5 @@
 
-<form>
+<form id="groupCreateForm" class="form-horizontal" method="post" action="GroupRegister">
  <!-- Form Name -->
  <fieldset>
   <legend>Group Chat</legend>
@@ -19,14 +19,23 @@
     <button id="searchGroupButton" name="searchGroupButton" class="btn btn-success">Search</button>
 
       <button id="resetGroupButton" name="resetGroupButton" class="btn btn-danger">Reset</button>
-    
+   
    </div>
 </div>
-<ul data-bind="foreach: searchGroups">
-    <li data-bind="text: groupName"></li>
-</ul>
+
+<div class="form-group">
+    <div class="col-md-8" id="searchResults">
+        <ul data-bind="foreach: searchGroups">
+            <li> 
+                <span data-bind="text: groupName "></span>
+                <a href="openChat.html">Send chat</a>
+            </li>
+        </ul>
+    </div>
+</div>
 </fieldset>
 </form>
+
 <form id="groupCreateForm" class="form-horizontal" method="post" action="GroupRegister">
  <fieldset>   
 <legend>Group Create</legend>
